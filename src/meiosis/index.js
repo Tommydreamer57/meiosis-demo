@@ -1,33 +1,40 @@
-import * as u from './utils';
 
-export const {
-    stream,
-    scan,
-    nestComponent
-} = u;
+// Look at meiosis docs to see implementation of stream & scan at top level
 
-export default function initialize(createApp, render, ...middleWares) {
-    // UPDATE
-    let update = stream();
+// createApp = function to create root app meiosis component
+// render = function to render app to the dom
+// middlewares = functions to invoke on the previous and currentmodel anytime there is a change
+export default function meiosis(createApp, render) {
 
-    // APP
+    // create the app, passing in the update function
     let app = createApp(update);
 
-    // INITIAL MODEL
-    let initialModel = app.model();
+    // track the previous and current models
+    let previousModel;
 
-    // MODELS
-    // -- callback (argument of update function), initialmodel, stream
-    let models = scan((model, cb) => cb(model), initialModel, update);
+    // current model starts at the app's model
+    let currentModel = app.model();
 
-    // CONNECT RENDER TO STREAMS
-    models.map(render(app));
+    // update = function to update the model and rerender the app
+    function update(callback) {
 
-    // ADD MIDDLEWARES
-    for (let fn of middleWares) {
-        models.map(fn);
+        // invoke the callback function on the current model
+        let newModel = callback(currentModel);
+
+        // if a new model was returned
+        if (newModel) {
+
+            // update the previous & current models
+            [previousModel, currentModel] = [currentModel, newModel];
+
+            // rerender app with the updated model
+            render(app.view(currentModel));
+
+        }
+
     }
 
-    // INITIALIZE APP
-    models(initialModel);
+    // render the app initially
+    render(app.view(currentModel));
+
 }

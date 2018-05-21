@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "react-scripts start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,5 +17,10 @@
   "bugs": {
     "url": "https://github.com/Tommydreamer57/meiosis-demo/issues"
   },
-  "homepage": "https://github.com/Tommydreamer57/meiosis-demo#readme"
+  "homepage": "https://github.com/Tommydreamer57/meiosis-demo#readme",
+  "dependencies": {
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-scripts": "^1.1.4"
+  }
 }
