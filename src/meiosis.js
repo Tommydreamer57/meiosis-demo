@@ -9,9 +9,6 @@ export default function meiosis(createApp, render) {
     // create the app, passing in the update function
     let app = createApp(update);
 
-    // track the previous and current models
-    let previousModel;
-
     // current model starts at the app's model
     let currentModel = app.model();
 
@@ -25,7 +22,7 @@ export default function meiosis(createApp, render) {
         if (newModel) {
 
             // update the previous & current models
-            [previousModel, currentModel] = [currentModel, newModel];
+            currentModel = newModel;
 
             // rerender app with the updated model
             render(app.view(currentModel));

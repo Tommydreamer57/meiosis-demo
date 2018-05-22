@@ -1,20 +1,27 @@
 import React from 'react';
-import initialModel from './model';
-import createList from './components/list';
-import createAdd from './components/add';
+import createList from './list';
+import createInput from './input';
 
 export default function createApp(update) {
+
     let list = createList(update);
-    let add = createAdd(update);
+    let input = createInput(update);
+
     return {
         model() {
-            return initialModel;
+            return {
+                listItems: [
+                    "one",
+                    "two",
+                    "three"
+                ]
+            };
         },
         view(model) {
             return (
                 <div id="app" >
                     {list.view(model)}
-                    {add.view(model)}
+                    {input.view(model)}
                 </div>
             );
         }

@@ -1,15 +1,17 @@
 import React from 'react';
 
-export default function createAdd(update) {
+export default function createInput(update) {
+
     function onKeyDown({ target, key }) {
-        if (key === 'Enter') {
+        if (key === "Enter") {
             update(model => ({
                 ...model,
-                list: [...model.list, target.value]
+                listItems: [...model.listItems, target.value]
             }));
             target.value = '';
         }
     }
+
     return {
         view(model) {
             return (

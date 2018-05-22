@@ -1,8 +1,6 @@
 
 # Meiosis Demo (React)
 
-<!-- <br/> -->
-
 Meiosis is a pattern for managing state in an application.
 It is a lightweight alternative to Redux that requires no libraries and allows for more direct control over state.
 Meiosis is easily compatible with virtual DOM libraries like React and Vue.
@@ -130,9 +128,9 @@ export default function meiosis(createApp, render) {
 
 <br/>
 
-## Meiosis Components
+## App Component
 
-Before we go into the top-level function that manages updates, let's take a look at what a component looks like:
+Before we go into the `update` function, let's take a look at what a component looks like:
 
 <summary><code>app.js</code></summary>
 
@@ -255,6 +253,98 @@ const render = view => ReactDOM.render(view, $root);
 meiosis(createApp, render);
 ```
 
+<br/>
+
+<details>
+
+<summary><code>meiosis.js</code></summary>
+
+```js
+export default function meiosis(createApp, render) {
+
+    let app = createApp(update);
+    let currentModel = app.model();
+
+    function update(callback) {
+        let newModel = callback(currentModel);
+
+        if (newModel) {
+            currentModel = newModel;
+            render(app.view(currentModel));
+        }
+    }
+
+    render(app.view(currentModel));
+}
+```
+
+</details>
+
+<details>
+
+<summary><code>index.js</code></summary>
+
+```js
+import ReactDOM from 'react-dom';
+import meiosis from './meiosis';
+import createApp from './app';
+
+const $root = document.getElementById("root");
+
+const render = view => ReactDOM.render(view, $root);
+
+meiosis(createApp, render);
+```
+
+</details>
+
+<details>
+
+<summary><code>app.js</code></summary>
+
+```js
+import React from 'react';
+
+export default function createApp(update) {
+
+    return {
+        model() {
+            return {
+
+            };
+        },
+        view(model) {
+            return (
+                <div id="app" >
+                    
+                </div>
+            );
+        }
+    };
+}
+```
+
+</details>
+
+<details>
+
+<summary><code>index.js</code></summary>
+
+```js
+import ReactDOM from 'react-dom';
+import meiosis from './meiosis';
+import createApp from './app';
+
+const $root = document.getElementById("root");
+
+const render = view => ReactDOM.render(view, $root);
+
+meiosis(createApp, render);
+```
+
+<br/>
+
+</details>
 
 <br/>
 
@@ -379,6 +469,111 @@ Now you should see a list of "one two three" in the browser. One of the great th
 
 <br/>
 
+<details>
+
+<summary><code>meiosis.js</code></summary>
+
+```js
+export default function meiosis(createApp, render) {
+
+    let app = createApp(update);
+    let currentModel = app.model();
+
+    function update(callback) {
+        let newModel = callback(currentModel);
+
+        if (newModel) {
+            currentModel = newModel;
+            render(app.view(currentModel));
+        }
+    }
+
+    render(app.view(currentModel));
+}
+```
+
+</details>
+
+<details>
+
+<summary><code>index.js</code></summary>
+
+```js
+import ReactDOM from 'react-dom';
+import meiosis from './meiosis';
+import createApp from './app';
+
+const $root = document.getElementById("root");
+
+const render = view => ReactDOM.render(view, $root);
+
+meiosis(createApp, render);
+```
+
+</details>
+
+<details>
+
+<summary><code>app.js</code></summary>
+
+```js
+import React from 'react';
+import createList from './list';
+
+export default function createApp(update) {
+
+    let list = createList(update);
+
+    return {
+        model() {
+            return {
+                listItems: [
+                    "one",
+                    "two",
+                    "three"
+                ]
+            };
+        },
+        view(model) {
+            return (
+                <div id="app" >
+                    {list.view(model)}
+                </div>
+            );
+        }
+    };
+}
+```
+
+</details>
+
+<details>
+
+<summary><code>list.js</code></summary>
+
+```js
+import React from 'react';
+
+export default function createList(update) {
+
+    return {
+        view(model) {
+            return (
+                <div>
+                    {model.listItems.map(item => (
+                        <div key={item} >{item}</div>
+                    ))}
+                </div>
+            );
+        }
+    };
+}
+```
+
+</details>
+
+<br/>
+
 ## Updating the Model
 
 Now the app has a static `view` that renders its initial `model`. Let's add another component to make the data dynamic:
@@ -470,7 +665,7 @@ export default function createInput(update) {
         if (key === "Enter") {
             update(model => ({
                 ...model,
-                listIems: [...model.listItems, target.value]
+                listItems: [...model.listItems, target.value]
             }));
             target.value = '';
         }
@@ -507,7 +702,7 @@ So we invoke `update` with a callback function that takes in the old `model` as 
 ```js
 update(model => ({
     ...model,
-    listIems: [...model.listItems, target.value]
+    listItems: [...model.listItems, target.value]
 }));
 ```
 Since we returned a new `model`, `update` will invoke `ReactDOM.render` again, passing in the new `model` into our `app`'s `view`.
@@ -521,10 +716,143 @@ target.value = '';
 
 <br/>
 
+Now we've successfully set up meiosis, created an app with multiple components, and can add items to the list and refresh the list component.
 
 <br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
+
+<details>
+
+<summary><code>meiosis.js</code></summary>
+
+```js
+export default function meiosis(createApp, render) {
+
+    let app = createApp(update);
+    let currentModel = app.model();
+
+    function update(callback) {
+        let newModel = callback(currentModel);
+
+        if (newModel) {
+            currentModel = newModel;
+            render(app.view(currentModel));
+        }
+    }
+
+    render(app.view(currentModel));
+}
+```
+
+</details>
+
+<details>
+
+<summary><code>index.js</code></summary>
+
+```js
+import ReactDOM from 'react-dom';
+import meiosis from './meiosis';
+import createApp from './app';
+
+const $root = document.getElementById("root");
+
+const render = view => ReactDOM.render(view, $root);
+
+meiosis(createApp, render);
+```
+
+</details>
+
+<details>
+
+<summary><code>app.js</code></summary>
+
+```js
+import React from 'react';
+import createList from './list';
+import createInput from './input';
+
+export default function createApp(update) {
+
+    let list = createList(update);
+    let input = createInput(update);
+
+    return {
+        model() {
+            return {
+                listItems: [
+                    "one",
+                    "two",
+                    "three"
+                ]
+            };
+        },
+        view(model) {
+            return (
+                <div id="app" >
+                    {list.view(model)}
+                    {input.view(model)}
+                </div>
+            );
+        }
+    };
+}
+```
+
+</details>
+
+<details>
+
+<summary><code>list.js</code></summary>
+
+```js
+import React from 'react';
+
+export default function createList(update) {
+
+    return {
+        view(model) {
+            return (
+                <div>
+                    {model.listItems.map(item => (
+                        <div key={item} >{item}</div>
+                    ))}
+                </div>
+            );
+        }
+    };
+}
+```
+
+</details>
+
+<details>
+
+<summary><code>input.js</code></summary>
+
+```js
+import React from 'react';
+
+export default function createInput(update) {
+
+    function onKeyDown({ target, key }) {
+        if (key === "Enter") {
+            update(model => ({
+                ...model,
+                listItems: [...model.listItems, target.value]
+            }));
+            target.value = '';
+        }
+    }
+
+    return {
+        view(model) {
+            return (
+                <input onKeyDown={onKeyDown} />
+            );
+        }
+    };
+}
+```
+
+</details>
