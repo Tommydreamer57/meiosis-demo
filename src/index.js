@@ -1,1 +1,1 @@
-import './routing';
+import './demo';
