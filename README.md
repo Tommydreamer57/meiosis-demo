@@ -836,3 +836,9 @@ export default function createInput(update) {
 ```
 
 </details>
+
+
+
+## More
+
+There is a ton more that you can do with meiosis. We've just covered the core basics. Read more on [meiosis.js.org](https://meiosis.js.org/), or follow the more in-depth [meiosis tutorial](http://meiosis.js.org/tutorial/toc.html), that will take you through how to create a stream and how to nest components and other cool things.
